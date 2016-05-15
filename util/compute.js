@@ -72,10 +72,6 @@ for (var key in specific)
  **/
 function computeMatchData(pm)
 {
-<<<<<<< HEAD
-=======
-    //WARNING: Don't store fields that mutate based on self_hero in player_caches table.  hero_id isn't set post-parse and the cache update will write incorrect data.
->>>>>>> template/string changes for damage received
     var self_hero = constants.heroes[pm.hero_id];
     // Compute patch based on start_time
     if (pm.start_time)
@@ -367,6 +363,40 @@ function renderMatch(m)
     //do render-only processing (not needed for aggregation, only for match display)
     m.players.forEach(function(pm, i)
     {
+        //converts hashes to arrays and sorts them
+        var targets = ["ability_uses", "item_uses", "damage_inflictor", "damage_inflictor_received"];
+        targets.forEach(function(target)
+        {
+            if (pm[target])
+            {
+                var t = [];
+                for (var key in pm[target])
+                {
+                    var a = constants.abilities[key];
+                    var i = constants.items[key];
+                    var def = {
+                        img: "/public/images/default_attack.png"
+                    };
+                    def = a || i || def;
+                    var result = {
+                        img: def.img,
+                        name: key === "undefined" || key === "null" ? "Auto Attack/Other" : key,
+                        val: pm[target][key],
+                        className: a ? "ability" : i ? "item" : "img-sm"
+                    };
+                    if (pm.hero_hits)
+                    {
+                        result.hero_hits = pm.hero_hits[key];
+                    }
+                    t.push(result);
+                }
+                t.sort(function(a, b)
+                {
+                    return b.val - a.val;
+                });
+                pm[target + "_arr"] = t;
+            }
+        });
         //filter interval data to only be >= 0
         if (pm.times)
         {
