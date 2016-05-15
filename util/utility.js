@@ -616,11 +616,7 @@ function serialize(row)
     var obj = {};
     for (var key in row)
     {
-        if (typeof(row[key]) === "boolean")
-        {
-            obj[key] = row[key] ? 'true' : '';
-        }
-        else if (row[key] !== null && !Number.isNaN(row[key]) && row[key] !== undefined)
+        if (row[key] !== null && !Number.isNaN(row[key]) && row[key] !== undefined)
         {
             obj[key] = JSON.stringify(row[key]);
         }
@@ -633,6 +629,7 @@ function serialize(row)
 function deserialize(row)
 {
     var obj = {};
+    console.log(row)
     row.keys().forEach(function(key)
     {
         try
