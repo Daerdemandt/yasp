@@ -360,6 +360,18 @@ function computeMatchData(pm)
  **/
 function renderMatch(m)
 {
+    m.hero_combat = {
+        damage:
+        {
+            radiant: 0,
+            dire: 0,
+        },
+        kills:
+        {
+            radiant: 0,
+            dire: 0,
+        },
+    };
     //do render-only processing (not needed for aggregation, only for match display)
     m.players.forEach(function(pm, i)
     {
@@ -380,7 +392,7 @@ function renderMatch(m)
                     def = a || i || def;
                     var result = {
                         img: def.img,
-                        name: key === "undefined" || key === "null" ? "Auto Attack/Other" : key,
+                        name: (!a && !i) ? "Auto Attack/Other" : key,
                         val: pm[target][key],
                         className: a ? "ability" : i ? "item" : "img-sm"
                     };
